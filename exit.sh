@@ -11,42 +11,54 @@ sudo useradd -u 1612 -g 1612 VVEGERO
 sudo useradd -u 1600 -g 1600 TEST
 
 #create folders
-cd ~/
+cd /home/VVEGERO/
 mkdir otp
 mkdir logs
 mkdir otp/go
 mkdir logs/go
-chmod -R 750 /otp/go
-chmod -R 740 /logs/go
-chown -R TEST:staff /otp/go
-chown -R TEST:staff /logs/go
+chmod -R 750 otp
+chmod -R 740 logs
+chown -R TEST:staff otp
+chown -R TEST:staff logs
 
 #log as VVEGERO
 
 su VVEGERO
 
-#-install wget
+cd ~/
 
-#-yum install wget -y
+#install wget
+
+yum install wget -y
 
 #download and extract GO
 
-#-wget https://dl.google.com/go/go1.13.linux-amd64.tar.gz
-#-tar -xvzf go1.13.linux-amd64.tar.gz -C /otp/go
+wget https://dl.google.com/go/go1.13.linux-amd64.tar.gz
+tar -C /otp/go -xvf go1.13.linux-amd64.tar.gz
 
 #add var GO in PATH
+##taking go bin file path into var
 
-#update .bashrc .bash_profile
+GOBIN=$(which go)
 
-echo "export PATH=$PATH:/otp/go" >> home/VVEGERO/.bash_profile
-echo "PATH=$PATH:/otp/go" >> home/VVEGERO/.bashrc
+##editing
+
+echo "PATH=$GOBIN:$PATH" >> .bashrc
+sed -i 's!PATH=!PATH=$GOBIN:!' ./.bash_profile
+
+##reloading to save changes
+
 source ~/.bashrc
 source ~/.bash_profile
 
+##check result
+
+echo "New PATH is set to: $PATH"
+
 #check GO version and bin file location
 
-#-rpm -q GO
-#-which GO
+rpm -q go
+which go
 
 ##Start Hello World dialogue cycle
 #tmpcnt=0
