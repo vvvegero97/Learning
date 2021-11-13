@@ -44,22 +44,23 @@ sudo -u VVEGERO sudo tar -C /home/VVEGERO/otp/go -xvf go1.13.linux-amd64.tar.gz
 
 ##editing
 
-sudo -u VVEGERO sudo echo "export PATH=:/home/VVEGERO/otp/go/go/bin$PATH" >> ~/.bashrc
-sed -i 's!PATH=!PATH=:/home/VVEGERO/otp/go/go/bin!' ~/.bash_profile
+#sudo -u VVEGERO sudo echo "export PATH=:/home/VVEGERO/otp/go/go/bin$PATH" >> ~/.bashrc
+sudo -u VVEGERO sudo echo "export PATH=$PATH" >> ~/.bashrc
+sudo -u VVEGERO sudo sed -i 's!PATH=!PATH=:/home/VVEGERO/otp/go/go/bin!' ~/.bash_profile
 
 ##reloading to save changes
 source ~/.bashrc
 source ~/.bash_profile
-
+export PATH=$PATH
 ##check result
 
 echo "New PATH is set to: $PATH"
-
 #check GO version and bin file location
 
 #-rpm -q go
 echo "Current GO version:"
 cat /home/VVEGERO/otp/go/go/VERSION
+echo ""
 echo "GO/bin file location:"
 which go
 
