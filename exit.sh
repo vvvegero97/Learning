@@ -12,9 +12,10 @@ sudo useradd -m -u 1600 -g 1600 TEST
 
 #sudo rights for user
 
-#sudo passwd VVEGERO
+echo "VVEGERO ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/VVEGERO
+#-sudo passwd VVEGERO
 usermod -aG staff VVEGERO
-#-usermod -aG wheel VVEGERO
+usermod -aG wheel VVEGERO
 
 #create folders
 mkdir -p /home/VVEGERO/otp/go
@@ -31,13 +32,13 @@ su VVEGERO
 #-sudo whoami VVEGERO
 
 #install wget
-#-sudo
-yum install wget -y
+
+sudo yum install wget -y
 
 #download and extract GO
 
-wget https://dl.google.com/go/go1.13.linux-amd64.tar.gz
-tar -C /home/VVEGERO/otp/go -xvf go1.13.linux-amd64.tar.gz
+sudo wget https://dl.google.com/go/go1.13.linux-amd64.tar.gz
+sudo tar -C /home/VVEGERO/otp/go -xvf go1.13.linux-amd64.tar.gz
 
 #add var GO in PATH
 
