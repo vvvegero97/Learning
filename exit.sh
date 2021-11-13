@@ -1,23 +1,24 @@
 #!/bin/bash
 
-#create groups
+
+# CREATE GROUPS
 
 sudo groupadd -g 1612 VVEGERO
 sudo groupadd -g 1600 staff
 
-# create users
+# CREATE USERS
 
 sudo useradd -m -u 1612 -g 1612 VVEGERO
 sudo useradd -m -u 1600 -g 1600 TEST
 
-#sudo rights for user
+# SUDO RIGHT FOR USER VVEGERO
 
 echo "VVEGERO ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/VVEGERO
-#-sudo passwd VVEGERO
 usermod -aG staff VVEGERO
 usermod -aG wheel VVEGERO
 
-#create folders
+# CREATE GO FOLDERS
+
 mkdir -p /home/VVEGERO/otp/go
 mkdir -p /home/VVEGERO/logs/go
 cd /home/VVEGERO/
@@ -26,41 +27,34 @@ chmod -R 740 logs
 chown -R TEST:staff otp
 chown -R TEST:staff logs
 
-#log as VVEGERO
-
-#-su VVEGERO
-#-sudo whoami VVEGERO
-
-#install wget
+# INSTALL WGET, IF NOT INSTALLED
 
 sudo -u VVEGERO sudo yum install wget -y
 
-#download and extract GO
+# DOWNLOAD AND EXTRACT GO
 
 sudo -u VVEGERO sudo wget https://dl.google.com/go/go1.13.linux-amd64.tar.gz
 sudo -u VVEGERO sudo tar -C /home/VVEGERO/otp/go -xvf go1.13.linux-amd64.tar.gz
 
-#add var GO in PATH
+# EDIT PATH
 
-##editing
+sudo -u VVEGERO sudo sed -i 's!PATH=!PATH=:/home/VVEGERO/otp/go/go/bin!' ~/.bashrc
 
-#sudo -u VVEGERO sudo echo "export PATH=:/home/VVEGERO/otp/go/go/bin$PATH" >> ~/.bashrc
-sudo -u VVEGERO sudo echo "export PATH=$PATH" >> ~/.bashrc
-sudo -u VVEGERO sudo sed -i 's!PATH=!PATH=:/home/VVEGERO/otp/go/go/bin!' ~/.bash_profile
+# RENEW .bashrc AND .bash_profile
 
-##reloading to save changes
 source ~/.bashrc
 source ~/.bash_profile
-export PATH=$PATH
-##check result
-
 echo "New PATH is set to: $PATH"
-#check GO version and bin file location
+export PATH=$PATH
 
-#-rpm -q go
+# CHECK GO VERSION
+
 echo "Current GO version:"
 cat /home/VVEGERO/otp/go/go/VERSION
 echo ""
+
+# CHECK GO bin-FILE LOCATION
+
 echo "GO/bin file location:"
 which go
 
