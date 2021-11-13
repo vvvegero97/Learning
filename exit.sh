@@ -33,28 +33,27 @@ chown -R TEST:staff logs
 
 #install wget
 
-sudo -u VVEGERO yum install wget -y
+sudo -u VVEGERO sudo yum install wget -y
 
 #download and extract GO
 
-sudo -u VVEGERO wget https://dl.google.com/go/go1.13.linux-amd64.tar.gz
-sudo -u VVEGERO tar -C /home/VVEGERO/otp/go -xvf go1.13.linux-amd64.tar.gz
+sudo -u VVEGERO sudo wget https://dl.google.com/go/go1.13.linux-amd64.tar.gz
+sudo -u VVEGERO sudo tar -C /home/VVEGERO/otp/go -xvf go1.13.linux-amd64.tar.gz
 
 #add var GO in PATH
 
 ##editing
 
-sudo -u VVEGERO echo "export PATH=$HOME/otp/go/go/bin$PATH" >> $HOME/.bashrc
+sudo -u VVEGERO sudo echo "export PATH=:/home/VVEGERO/otp/go/go/bin$PATH" >> /.bashrc
 #-sed -i 's!PATH=!PATH=/home/VVEGERO/otp/go:!' ~/.bash_profile
 
 ##reloading to save changes
-
-sudo -u VVEGERO source ~/.bashrc
-sudo -u VVEGERO source ~/.bash_profile
+source ~/.bashrc
+source ~/.bash_profile
 
 ##check result
 
-sudo -u VVEGERO echo "New PATH is set to: $PATH"
+echo "New PATH is set to: $PATH"
 
 #check GO version and bin file location
 
