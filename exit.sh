@@ -28,39 +28,41 @@ chown -R TEST:staff logs
 
 #log as VVEGERO
 
-su VVEGERO
+#-su VVEGERO
 #-sudo whoami VVEGERO
 
 #install wget
 
-sudo yum install wget -y
+sudo -u VVEGERO yum install wget -y
 
 #download and extract GO
 
-sudo wget https://dl.google.com/go/go1.13.linux-amd64.tar.gz
-sudo tar -C /home/VVEGERO/otp/go -xvf go1.13.linux-amd64.tar.gz
+sudo -u VVEGERO wget https://dl.google.com/go/go1.13.linux-amd64.tar.gz
+sudo -u VVEGERO tar -C /home/VVEGERO/otp/go -xvf go1.13.linux-amd64.tar.gz
 
 #add var GO in PATH
 
 ##editing
 
-echo "export PATH=$HOME/otp/go/go/bin$PATH" >> $HOME/.bashrc
+sudo -u VVEGERO echo "export PATH=$HOME/otp/go/go/bin$PATH" >> $HOME/.bashrc
 #-sed -i 's!PATH=!PATH=/home/VVEGERO/otp/go:!' ~/.bash_profile
 
 ##reloading to save changes
 
-source ~/.bashrc
-source ~/.bash_profile
+sudo -u VVEGERO source ~/.bashrc
+sudo -u VVEGERO source ~/.bash_profile
 
 ##check result
 
-echo "New PATH is set to: $PATH"
+sudo -u VVEGERO echo "New PATH is set to: $PATH"
 
 #check GO version and bin file location
 
 #-rpm -q go
+echo "Current GO version:"
 cat $HOME/otp/go/go/VERSION
-which go
+echo "GO/bin file location:"
+sudo -u VVEGERO which go
 
 ##Start Hello World dialogue cycle
 #tmpcnt=0
