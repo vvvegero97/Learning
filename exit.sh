@@ -10,6 +10,11 @@ sudo groupadd -g 1600 staff
 sudo useradd -m -u 1612 -g 1612 VVEGERO
 sudo useradd -m -u 1600 -g 1600 TEST
 
+#sudo rights for user
+
+sudo passwd VVEGERO
+usermod -aG wheel VVEGERO
+
 #create folders
 mkdir -p /home/VVEGERO/otp/go
 mkdir -p /home/VVEGERO/logs/go
@@ -19,25 +24,26 @@ chmod -R 740 logs
 chown -R TEST:staff otp
 chown -R TEST:staff logs
 
-#log as VVEGERO
+#log as VVEGERO and check sudo rights
 
 su VVEGERO
+sudo whoami VVEGERO
 
 #install wget
 
-yum install wget -y
+sudo yum install wget -y
 
 #download and extract GO
 
-wget https://dl.google.com/go/go1.13.linux-amd64.tar.gz
-tar -C /home/VVEGERO/otp/go -xvf go1.13.linux-amd64.tar.gz
+sudo wget https://dl.google.com/go/go1.13.linux-amd64.tar.gz
+sudo tar -C /home/VVEGERO/otp/go -xvf go1.13.linux-amd64.tar.gz
 
 #add var GO in PATH
 
 ##editing
 
-echo "export PATH=/home/VVEGERO/otp/go:$PATH" >> .bashrc
-sed -i 's!PATH=!PATH=/home/VVEGERO/otp/go:!' ./.bash_profile
+echo "export PATH=$HOME/otp/go/go/bin$PATH" >> $HOME/.bashrc
+#-sed -i 's!PATH=!PATH=/home/VVEGERO/otp/go:!' ~/.bash_profile
 
 ##reloading to save changes
 
@@ -50,7 +56,8 @@ echo "New PATH is set to: $PATH"
 
 #check GO version and bin file location
 
-rpm -q go
+#-rpm -q go
+cat $HOME/otp/go/go/VERSION
 which go
 
 ##Start Hello World dialogue cycle
