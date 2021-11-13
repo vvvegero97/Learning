@@ -1,5 +1,5 @@
 #!/bin/bash
-
+i
 #create groups
 
 sudo groupadd -g 1612 VVEGERO
@@ -7,8 +7,8 @@ sudo groupadd -g 1600 staff
 
 # create users
 
-sudo useradd -u 1612 -g 1612 VVEGERO
-sudo useradd -u 1600 -g 1600 TEST
+sudo useradd -m -u 1612 -g 1612 VVEGERO
+sudo useradd -m -u 1600 -g 1600 TEST
 
 #create folders
 cd /home/VVEGERO/
@@ -25,8 +25,6 @@ chown -R TEST:staff logs
 
 su VVEGERO
 
-cd ~/
-
 #install wget
 
 yum install wget -y
@@ -37,14 +35,11 @@ wget https://dl.google.com/go/go1.13.linux-amd64.tar.gz
 tar -C /otp/go -xvf go1.13.linux-amd64.tar.gz
 
 #add var GO in PATH
-##taking go bin file path into var
-
-GOBIN=$(which go)
 
 ##editing
 
-echo "PATH=$GOBIN:$PATH" >> .bashrc
-sed -i 's!PATH=!PATH=$GOBIN:!' ./.bash_profile
+echo "export PATH=/otp/go:$PATH" >> .bashrc
+sed -i 's!PATH=!PATH=/otp/go:!' ./.bash_profile
 
 ##reloading to save changes
 
