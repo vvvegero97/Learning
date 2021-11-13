@@ -11,9 +11,9 @@ sudo useradd -m -u 1612 -g 1612 VVEGERO
 sudo useradd -m -u 1600 -g 1600 TEST
 
 #create folders
-cd /home/VVEGERO/
 mkdir -p /home/VVEGERO/otp/go
 mkdir -p /home/VVEGERO/logs/go
+cd /home/VVEGERO/
 chmod -R 750 otp
 chmod -R 740 logs
 chown -R TEST:staff otp
@@ -30,14 +30,14 @@ yum install wget -y
 #download and extract GO
 
 wget https://dl.google.com/go/go1.13.linux-amd64.tar.gz
-tar -C /otp/go -xvf go1.13.linux-amd64.tar.gz
+tar -C /home/VVEGERO/otp/go -xvf go1.13.linux-amd64.tar.gz
 
 #add var GO in PATH
 
 ##editing
 
-echo "export PATH=/otp/go:$PATH" >> .bashrc
-sed -i 's!PATH=!PATH=/otp/go:!' ./.bash_profile
+echo "export PATH=/home/VVEGERO/otp/go:$PATH" >> .bashrc
+sed -i 's!PATH=!PATH=/home/VVEGERO/otp/go:!' ./.bash_profile
 
 ##reloading to save changes
 
