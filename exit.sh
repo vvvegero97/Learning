@@ -1,5 +1,5 @@
 #!/bin/bash
-i
+
 #create groups
 
 sudo groupadd -g 1612 VVEGERO
@@ -12,10 +12,8 @@ sudo useradd -m -u 1600 -g 1600 TEST
 
 #create folders
 cd /home/VVEGERO/
-mkdir otp
-mkdir logs
-mkdir otp/go
-mkdir logs/go
+mkdir -p /home/VVEGERO/otp/go
+mkdir -p /home/VVEGERO/logs/go
 chmod -R 750 otp
 chmod -R 740 logs
 chown -R TEST:staff otp
