@@ -58,43 +58,4 @@ echo ""
 echo "GO/bin file location:"
 which go
 
-##Start Hello World dialogue cycle
-#tmpcnt=0
-#while [ "$tmpcnt" -eq "0" ]
-#do
-#
-##ask user
-#
-#	echo "Type 'Yes' or 'No' if you want or don't want me to create 'Hello, World'"
-#	read INPUT
-#
-##positive answer
-#
-#	if [ "$INPUT" == "Yes" ]; then
-#
-##make go file for "Hello, World!" output
-#
-#		mkdir ~/src/hello
-#		touch /src/hello/hello.go
-#		file=/src/hello/hello.go
-#		echo "package main" > $file
-#		echo "" >> $file
-#		echo 'import "fmt"' >> $file
-#		echo "" >> $file
-#		echo "func main() {" >> $file
-#		echo '	fmt.Printf("Hello, World/n")' >> $file
-#		echo "}" >> $file
-#		go build $file
-#
-##negative answer
-#
-#	elif [ "$INPUT" == "No" ]; then
-#		tmpcnt=$((tmpcnt + 1))
-#		echo "BYE!"
-#
-##unknown answer
-#
-#	else echo "Sorry, unknown answer. Type 'Yes' to create 'Hello, World' or type 'No' to exit"
-#	fi
-#done
-#exit 0
+
