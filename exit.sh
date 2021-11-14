@@ -28,7 +28,9 @@ chown -R TEST:staff otp
 chown -R TEST:staff logs
 
 # INSTALL WGET, IF NOT INSTALLED
-
+# 
+# Проверь установлен WGET или нет - если установлен, то зачем Wget инсталить?
+# 
 sudo -u VVEGERO sudo yum install wget -y
 
 # DOWNLOAD AND EXTRACT GO
