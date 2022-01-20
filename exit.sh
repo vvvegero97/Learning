@@ -28,10 +28,12 @@ chown -R TEST:staff otp
 chown -R TEST:staff logs
 
 # INSTALL WGET, IF NOT INSTALLED
-# 
-# Проверь установлен WGET или нет - если установлен, то зачем Wget инсталить?
-# 
-sudo -u VVEGERO sudo yum install wget -y
+wgetchk=1
+yum list installed wget >/dev/null ; echo $? > wgetchk
+if [ "$wgetchk" -ne "0"]; then
+
+	sudo -u VVEGERO sudo yum install wget -y
+fi
 
 # DOWNLOAD AND EXTRACT GO
 
