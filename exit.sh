@@ -29,7 +29,9 @@ chown -R TEST:staff logs
 
 # INSTALL WGET, IF NOT INSTALLED
 wgetchk=1
-yum list installed wget >/dev/null ; echo $? > wgetchk
+yum list installed wget >/dev/null
+echo $? > wgetchk
+
 if [ "$wgetchk" -ne "0"]; then
 
 	sudo -u VVEGERO sudo yum install wget -y
