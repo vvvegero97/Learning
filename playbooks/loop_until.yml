@@ -1,0 +1,38 @@
+---
+- name: Loops Playbook
+  hosts: staging_DB
+  become: yes
+
+
+  tasks:
+  - name: Say Hello to ALL
+    debug: msg="Hello {{ item }}"
+    loop: 
+      - "Player1"
+      - "Player2"
+      - "Admin"
+
+  - name: Loop Until example
+    shell: echo -n Z >> myfile.txt && cat myfile.txt
+    register: output
+    delay: 2
+    retries: 10
+    until: output.stdout.find("ZZZZ") == false
+
+  - name: Print Final Output
+    debug:
+      var: output.stdout
+
+
+
+
+
+
+#  - name: Install many packages
+#    yum: name={{ item }} state=installed
+#    loop: 
+#      - "Package1"
+#      - "Package2"
+#      - "Package3"
+#      - "Package4"
+
