@@ -1,0 +1,19 @@
+---
+- name: Ansible Handling
+  hosts: staging_DB
+  any_errors_fatal : true
+  become: yes
+
+
+  tasks:
+    - name: Task Number1
+      yum: name=tree state=latest
+      ignore_errors: yes
+
+    - name: Task Number2
+      shell: cat /home/vegero/myfile.txt
+      register: results
+
+    - name: Task Number3
+      shell: echo Privet Mir!!!
+
