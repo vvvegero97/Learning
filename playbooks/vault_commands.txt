@@ -1,0 +1,14 @@
+ansible-vault create mysecretfile.txt
+ansible-vault view mysecretfile.txt
+ansible-vault edit mysecretfile.txt
+
+ansible-vault rekey mysecretfile.txt
+
+ansible-vault encrypt myfile.txt
+ansible-vault decrypt myfile.txt
+
+ansible-playbook myplaybook.yml --ask-vault-pass
+ansible-playbook myplaybook.yml --vault-password-file Password.txt
+
+ansible-vault encrypt string
+echo -n "secretword" | ansible-vault encrypt_string

@@ -1,0 +1,26 @@
+---
+- name: Ansible Vault
+  hosts: staging_DB
+  become: yes
+
+  vars:
+    admin_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          63316432316538343736373735303663663663306633373739353539343561353433663038646266
+          6163663665386565313966396561323562353337313732340a383262653035616333383035636663
+          66636661613332373664376562396132386436333262313031393861393965356563363766343539
+          6535303333306136660a643333356463356431386433623066383062343838633630356564653061
+          34383533356635333635366234393764356261383530363037356539656234356637
+
+  tasks:
+  - name: Install Package Tree
+    yum: name=tree state=latest
+  - name: Create Config File
+    copy:
+      dest: "/home/vegero/myconfig.conf"
+      content: |
+        port = 9092
+        log = /days
+        home = /opt/kafka/bin/
+        user = admin
+        password = {{ admin_password }}
