@@ -1,0 +1,25 @@
+10.50.1.1
+10.50.1.2
+
+[staging_DB]
+centos1 ansible_host=192.168.100.6    owner=Home
+centos2 ansible_host=192.168.0.32     owner=Work
+
+[staging_APP]
+example ansible_host=192.168.1.1
+192.168.1.2
+
+[staging_APP:vars]
+ansible_user=vegero
+ansible_ssh_private_key_file=/path/to/file.pem
+
+[staging_WEB]
+192.168.2.1
+192.168.2.2
+
+[staging_ALL:children]
+staging_DB
+staging_APP
+staging_WEB
+
+
