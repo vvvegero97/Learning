@@ -1,0 +1,46 @@
+---
+- name: Initial Package Setup
+  hosts: staging_DB
+  become: yes
+  
+  vars:
+    source_folder: /root/ansible/MyWebPage
+    destin_folder: /var/www/html
+
+  tasks:
+  - name: Linux Version
+    debug: var=ansible_os_family
+
+  - name: Install all the packages
+    yum: 
+      name: ['curl', 'docker', 'epel-release', 'net-tools', 'git', 'httpd', 'openssh', 'pcre', 'pcre-devel',
+'php', 'python', 'sed', 'tar', 'tree', 'nano', 'wget']
+      state: latest
+      update_cache: True
+
+  - name: Setup Success Message
+    debug:
+      msg: "ALL PACKAGES INSTALLED"
+
+  - name: Packages List output
+    shell: cat packetlist.txt
+    register: output
+    
+  - name: Packages List Show
+    debug:
+      var: output.stdout
+
+
+  - name: Start Apache Web Server
+    service: name=httpd state=started enabled=yes
+
+  - name: Copy my Web Page
+    template: src={{ source_folder }}/index.j2 dest={{ destin_folder }}/index.html mode=0555
+    notify:
+    - Restart Apache
+
+
+  handlers:
+  - name: Restart Apache
+    service: name=httpd state=restarted
+      
