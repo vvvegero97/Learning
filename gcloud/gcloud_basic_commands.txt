@@ -1,0 +1,12 @@
+gcloud version ########################################### ...
+gcloud init ############################################## setup gcloud with Google Cloud
+gcloud services enable container.googleapis.com ########## Enable k8s creation in Google Cloud project
+
+gcloud containter clusters create kekis ################## Create and Run k8s Cluster with default settings
+gcloud containter clusters create kekis --num-nodes=4 #### Create and Run k8s Cluster with custom settings
+gcloud containter clusters get-credentials kekis ######### setup kubectl with k8s Cluster
+gcloud containter clusters delete kekis ################## Delete k8s Cluster (can't bet just stopped, need to be deleted)
+
+kubectl version --client #################################
+kibectl cluster-info #####################################
+kubectl get nodes ########################################
