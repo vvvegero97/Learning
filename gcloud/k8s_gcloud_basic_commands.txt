@@ -10,3 +10,5 @@ gcloud containter clusters delete kekis ################## Delete k8s Cluster (c
 kubectl version --client #################################
 kibectl cluster-info #####################################
 kubectl get nodes ########################################
+
+########################################################## config location:   ~/.kube/config
