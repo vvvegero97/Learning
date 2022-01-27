@@ -1,0 +1,10 @@
+kubectl get pods ################################# show all pods
+kubectl run hello --image=nginx:latest --port=80 # create pod from Dockerfile nginx:latest and open port 80
+kubectl port-forward hello 7777:80 ############### host port 7777 -->> pod port 80
+kubectl describe pods hello ###################### all pod info
+kubectl delete pods hello ######################## delete pod named hello
+kubectl logs hello ############################### show log 
+kubectl exec my-web date ######################### execute date command on my-web pod
+kubectl exec -it my-web bash ##################### execute interactive bash on pod my-web
+kubectl apply -f myfile.yaml ##################### create objects in k8s from myfile.yaml manifest
+kubectl delete -f myfile.yaml #################### delete objects in k8s from myfile.yaml manifest
