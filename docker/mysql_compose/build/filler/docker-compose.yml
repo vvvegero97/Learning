@@ -1,0 +1,35 @@
+version: "3.7"
+                                              # Networks to be created
+networks:
+  mynet:
+    driver: bridge
+                                              # Define services
+services:
+                                              # Database service from official image
+  mysql:
+    image: mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: employees
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_USER: user
+      MYSQL_PASS: user
+                                              # Networks to join
+    networks:
+      - mynet
+                                              # Service to create and populate database from Dockerfile
+  filler:
+    build:
+      context: ./myvol
+                                              # Start mysql service first
+    depends_on:
+      - mysql
+                                               # restart: always
+    ports:
+      - "1234:80"
+                                              # Networks to join
+    networks:
+      - mynet

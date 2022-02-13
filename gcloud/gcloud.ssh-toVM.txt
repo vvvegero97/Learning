@@ -1,0 +1,1 @@
+gcloud compute ssh --project=prod-339415 --zone=europe-central2-a sshtest

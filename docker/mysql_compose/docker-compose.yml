@@ -1,0 +1,14 @@
+version: "3.6"
+services:
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ugybasyne
+    volumes:
+      - ./dump/01_employees.sql:/docker-entrypoint-initdb.d/01_employees.sql
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

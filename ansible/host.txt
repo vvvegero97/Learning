@@ -1,0 +1,20 @@
+
+[prod]
+centos1 ansible_host=192.168.100.6    owner=Home
+
+[staging_DB]
+centos2 ansible_host=192.168.0.32     owner=Work
+
+[staging_APP]
+192.168.1.2
+
+[staging_APP:vars]
+ansible_user=vegero
+ansible_ssh_private_key_file=/path/to/file.pem
+
+[staging_ALL:children]
+prod
+staging_DB
+staging_APP
+
+
