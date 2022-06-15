@@ -1,0 +1,14 @@
+route:
+  receiver: "mail"
+  repeat_interval: 4h
+  group_by: [alertname]
+
+receivers:
+  - name: "mail"
+    email_configs:
+      - smarthost: smtp.gmail.com:587
+        auth_username: "vovatagil6@gmail.com"
+        auth_identity: "alertmanager"
+        auth_password: "hqqsvsrqrockxzwy"
+        from: "vovatagil6@gmail.com"
+        to: "vvvegero97@gmail.com"
