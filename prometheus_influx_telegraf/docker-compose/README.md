@@ -1,9 +1,9 @@
 # Example docker-compose stack for PROMETHEUS Remote Write to INFLUXdb via TELEGRAF  
-Don't forget to update telegraf.conf:
+Don't forget to update <b>telegraf.conf</b>:
 - Influx URL, 
 - Influx API token, 
 - Influx Bucket ID  
-Don't forget to update grafana-provisioning/datasources/datasource.yml
+Don't forget to update <b>grafana-provisioning/datasources/datasource.yml</b>
 - Influx URL, 
 - Influx API token, 
 - Influx Bucket ID(name)  
