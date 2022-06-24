@@ -7,11 +7,11 @@ deleteDatasources:
 datasources:
   - name: InfluxDB
     type: influxdb
-    access: proxy
-    database: db0
-    user: admin
-    password: admin
-    url: http://influxdb:8086
+    access: server
+    url: https://eu-central-1-1.aws.cloud2.influxdata.com
+    orgId: vvvegero97@gmail.com
+    access_token: $INFLUX_TOKEN  ####??????????
+    default_bucket: $BUCKET_NAME ###?????????
     isDefault: true
     editable: true
 
