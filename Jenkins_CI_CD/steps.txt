@@ -1,0 +1,71 @@
+##java-openjdk11
+#--------------------MASTER STARTUP----------------------------------
+sudo amazon-linux-extras install -y java-openjdk11
+sudo wget -O /etc/yum.repos.d/jenkins.repo \
+    https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+sudo yum upgrade
+sudo yum install -y jenkins
+sudo systemctl daemon-reload
+sudo systemctl enable jenkins
+sudo systemctl start jenkins
+ssh-keygen
+#-------------------SLAVE STARTUP-------------------------------------
+sudo amazon-linux-extras install -y java-openjdk11
+sudo useradd -d /var/lib/jenkins jenkins
+sudo mkdir /var/lib/jenkins/.ssh
+sudo touch /var/lib/jenkins/.ssh/authorized_keys
+echo 'MASTER_PUBLIC_KEY' | sudo tee -a /var/lib/jenkins/.ssh/authorized_keys
+sudo chown -R jenkins /var/lib/jenkins/.ssh
+
+##git
+sudo yum update -y
+sudo yum install git -y
+git version
+
+##docker
+sudo yum update -y
+sudo amazon-linux-extras install docker
+sudo service docker start
+sudo systemctl enable docker
+sudo usermod -a -G docker jenkins
+docker info
+            #aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
+            #docker pull ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}
+            #docker images
+            #docker rmi \${AWS_ACCOUNT_ID}.dkr.ecr.\${AWS_DEFAULT_REGION}.amazonaws.com/\${IMAGE_REPO_NAME}:\${IMAGE_TAG} 
+
+##kubectl
+curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.22.6/2022-03-09/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
+kubectl version --short --client
+
+##helm
+sudo curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+helm version --short
+#################----------------HELM S3----------------#################
+
+# SETUP
+# install s3 plugin : helm plugin install https://github.com/hypnoglow/helm-s3.git
+# create museum     : helm s3 init s3://vegero-helm-charts/stable/myapp
+# check creation    : aws s3 ls s3://vegero-helm-charts/stable/myapp/
+# add repo          : helm repo add stable-myapp s3://vegero-helm-charts/stable/myapp
+# package           : helm package ./webapp
+# push to museum    : helm s3 push ./webapp-0.1.0.tgz stable-myapp # chart version is from Chart.yaml
+# check after push  : helm repo update && helm search repo stable-myapp
+
+## UPGRADE
+## upgrade your chart (ex. replicaCount), chart version should be updated via CI/CD pipeline
+## package again    : helm package ./app-chart
+## push to museum   : helm s3 push ./app-chart-0.1.1.tgz stable-myapp
+## check after push : helm repo update && helm search repo stable-myapp
+
+### INSTALL FROM MUSEUM
+### search repo   : helm search repo app-chart
+### install chart : helm upgrade --install RELEASE_NAME stable-myapp/app-chart --create-namespace --namespace dev --cleanup-on-fail
+
+#### ROLLBACK
+#### get revisions                 : helm history RELEASE_NAME --namespace dev -o json
+#### rollback to previous revision : helm rollback RELEASE_NAME --wait --namespace dev

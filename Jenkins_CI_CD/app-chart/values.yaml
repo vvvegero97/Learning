@@ -1,0 +1,8 @@
+# Default Values for Helm Chart
+
+labels:
+  env: default
+container:
+  image: sampleimage
+
+replicaCount: 2

@@ -1,0 +1,107 @@
+pipeline {
+  agent { label 'Slave' }
+  environment {
+    AWS_ACCOUNT_ID     = "178112661675"
+    AWS_DEFAULT_REGION = "eu-north-1"
+    // IMAGE_REPO_NAME    = "vegero-tg-ecr"
+    IMAGE_REPO_NAME    = "testrepo"
+    IMAGE_TAG          = "latest"
+    REPOSITORY_URI     = "\${AWS_ACCOUNT_ID}.dkr.ecr.\${AWS_DEFAULT_REGION}.amazonaws.com/\${IMAGE_REPO_NAME}"
+    CHART_S3           = "s3://vegero-helm-charts/stable/myapp/"
+    CHART_REPO         = "stable-myapp"
+    APP_NAME           = "my-webapp"
+  }
+  stages {
+    stage('Build docker image and run tests') {
+        steps{
+          dir('webapp') {
+              sh '''
+                  docker build -t \${AWS_ACCOUNT_ID}.dkr.ecr.\${AWS_DEFAULT_REGION}.amazonaws.com/\${IMAGE_REPO_NAME}:\${BUILD_NUMBER} .
+              '''
+          }
+          sh '''
+              echo 'This is \${GIT_BRANCH} branch. Commit: \${GIT_COMMIT}.'
+              ls -la 
+              pwd
+              helm version
+              LINES=`docker images | grep \${IMAGE_REPO_NAME} | grep \${BUILD_NUMBER} | wc -l`
+              if [[ $LINES -ge 1 ]]
+              then
+                echo "IMAGE IS HERE!!!!!"
+              else
+                echo "NO IMAGE?????"
+              fi
+          '''
+        }
+    }
+
+    stage('Tag docker image, Push images to ECR and delete Local images') {
+        steps{
+          sh '''
+              docker image tag \${AWS_ACCOUNT_ID}.dkr.ecr.\${AWS_DEFAULT_REGION}.amazonaws.com/\${IMAGE_REPO_NAME}:\${BUILD_NUMBER} \${AWS_ACCOUNT_ID}.dkr.ecr.\${AWS_DEFAULT_REGION}.amazonaws.com/\${IMAGE_REPO_NAME}:\${IMAGE_TAG}
+              aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin \${AWS_ACCOUNT_ID}.dkr.ecr.\${AWS_DEFAULT_REGION}.amazonaws.com
+              docker push \${AWS_ACCOUNT_ID}.dkr.ecr.\${AWS_DEFAULT_REGION}.amazonaws.com/\${IMAGE_REPO_NAME}:${IMAGE_TAG}
+              docker push \${AWS_ACCOUNT_ID}.dkr.ecr.\${AWS_DEFAULT_REGION}.amazonaws.com/\${IMAGE_REPO_NAME}:${BUILD_NUMBER}
+              echo Build number is \${BUILD_NUMBER}
+              docker rmi \${AWS_ACCOUNT_ID}.dkr.ecr.\${AWS_DEFAULT_REGION}.amazonaws.com/\${IMAGE_REPO_NAME}:\${IMAGE_TAG}
+              docker rmi \${AWS_ACCOUNT_ID}.dkr.ecr.\${AWS_DEFAULT_REGION}.amazonaws.com/\${IMAGE_REPO_NAME}:\${BUILD_NUMBER}
+              docker image prune -f
+          '''
+        }
+    }
+
+    stage('Push new Chart to Museum') {
+      steps{
+        dir ('app-chart'){
+          sh '''
+              echo "This is deploy script."
+              echo "Chart bucket: \${CHART_S3}"
+              echo "Contents of bucket: "
+              aws s3 ls \${CHART_S3}
+              #helm s3 init s3://vegero-helm-charts/stable/myapp
+              helm repo add stable-myapp s3://vegero-helm-charts/stable/myapp
+              helm repo update
+              helm repo list
+              sed -i "s/app-name/\${APP_NAME}/g" ./Chart.yaml
+              cat ./Chart.yaml
+              sed -i "s!sampleimage!${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}!g" ./values.yaml
+              sed -i "s/default/${BUILD_NUMBER}-app/g" ./values.yaml
+              cat ./values.yaml
+          '''
+        }
+        sh '''
+            helm package ./app-chart
+            ls -la
+            VERSION=`cat ./app-chart/Chart.yaml | grep version | awk '{print $3}'`
+            helm s3 push ./${APP_NAME}-${VERSION}.tgz ${CHART_REPO} --force
+            helm repo update && helm search repo ${CHART_REPO}             
+        '''
+      }
+    }
+    stage('Deploy new chart to AWS EKS'){
+      steps{
+        withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECRED')]) {
+          sh 'cat $KUBECRED > ~/.kube/config'
+        }
+        sh '''
+          helm version
+          #helm upgrade --install jenkins-webapp ${CHART_REPO}/${APP_NAME} --namespace default --cleanup-on-fail --wait
+          cat ~/.kube/config
+          echo "Deployment Successful !!!"
+        '''
+      }
+    }
+  }
+  post {
+    failure {
+      emailext body: '\${JOB_NAME} build \${BUILD_NUMBER} Failed !!!',
+      subject: 'Jenkins \${JOB_NAME}',
+      to: 'vvvegero97@gmail.com'
+    }
+    success {
+      emailext body: '\${JOB_NAME} build \${BUILD_NUMBER} Succeeded !!!',
+      subject: 'Jenkins \${JOB_NAME}',
+      to: 'vvvegero97@gmail.com'
+    }
+  }
+}
