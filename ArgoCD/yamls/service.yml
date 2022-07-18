@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+  labels:
+    env: dev
+  namespace: myapp
+spec:
+  selector:
+    env: dev
+    app: myapp
+  ports:
+    - port: 1234
+      targetPort: 5000
+  type: ClusterIP

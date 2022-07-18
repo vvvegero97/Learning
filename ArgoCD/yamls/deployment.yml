@@ -1,0 +1,25 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: myapp
+  name: myapp-deployment
+  labels:
+    app: myapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      env: dev
+      app: myapp
+  template:
+    metadata:
+      labels:
+        env: dev
+        app: myapp
+    spec:
+      containers:
+        - name: myapp
+          image: vvvegero97/pythonweb:latest
+          ports:
+            - containerPort: 5000

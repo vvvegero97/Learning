@@ -1,0 +1,15 @@
+project: default
+source:
+  repoURL: 'https://github.com/vvvegero97/argocd-test.git'
+  path: yamls
+  targetRevision: HEAD
+destination:
+  server: 'https://kubernetes.default.svc'
+  namespace: myapp
+syncPolicy:
+  automated:
+    prune: true
+    selfHeal: true
+  syncOptions:
+    - CreateNamespace=true
+    - Replace=true
